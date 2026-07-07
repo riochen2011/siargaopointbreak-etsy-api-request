@@ -1,0 +1,1113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Siargao Point Break: Etsy API Access Request</title>
+<meta name="description" content="Etsy Open API v3 access request for Siargao Point Break, a small surf jewelry shop. Shopify listing transfer, listing automation with human review, and Pinterest and Instagram content that links back to Etsy.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c2233'/%3E%3Cpath d='M8 40c8-10 14-10 20-3s12 7 20-2 8-6 8-6v23H8z' fill='%230e7c86'/%3E%3Cpath d='M32 14l9 18H23z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Archivo:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #0c2233;
+    --ink-soft: #3f5468;
+    --paper: #f6f1e7;
+    --card: #fffdf8;
+    --line: #e0d7c6;
+    --line-soft: #eae3d4;
+    --teal: #0e7c86;
+    --teal-deep: #0a5b64;
+    --teal-soft: #e3f0ef;
+    --coral: #e8563a;
+    --coral-soft: #fdeae4;
+    --gold: #c99b3f;
+    --etsy: #f1641e;
+    --shopify: #5e8e3e;
+    --pinterest: #e60023;
+    --ig-a: #f9ce34;
+    --ig-b: #ee2a7b;
+    --ig-c: #6228d7;
+    --mint: #e2f2e6;
+    --green-ink: #2e6b45;
+    --radius: 14px;
+    --shadow: 0 20px 50px rgba(12, 34, 51, 0.10);
+    --shadow-soft: 0 10px 26px rgba(12, 34, 51, 0.06);
+    --display: "Fraunces", Georgia, serif;
+    --body: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    --mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 16.5px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  }
+
+  .wrap { width: min(1140px, calc(100% - 40px)); margin: 0 auto; }
+
+  a { color: var(--teal-deep); text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative;
+    background: var(--ink);
+    color: #f4efe4;
+    overflow: hidden;
+  }
+
+  .hero-waves {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    right: -260px;
+    top: -420px;
+    background: radial-gradient(closest-side, rgba(14, 124, 134, 0.55), transparent 70%);
+    filter: blur(10px);
+  }
+
+  .hero-glow.two {
+    left: -320px;
+    right: auto;
+    top: auto;
+    bottom: -560px;
+    background: radial-gradient(closest-side, rgba(232, 86, 58, 0.28), transparent 70%);
+  }
+
+  .hero-inner {
+    position: relative;
+    padding: 54px 0 74px;
+  }
+
+  .topline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 44px;
+  }
+
+  .lockup { display: flex; align-items: center; gap: 14px; }
+
+  .lockup svg { width: 54px; height: 54px; flex: 0 0 54px; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.35)); }
+
+  .lockup-name {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 21px;
+    letter-spacing: 0.2px;
+  }
+
+  .lockup-sub { font-size: 13px; color: rgba(244, 239, 228, 0.62); margin-top: 1px; }
+
+  .store-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: rgba(244, 239, 228, 0.1);
+    border: 1px solid rgba(244, 239, 228, 0.25);
+    color: #f4efe4;
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .store-pill:hover { background: rgba(244, 239, 228, 0.2); }
+
+  .store-pill .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--etsy); box-shadow: 0 0 0 4px rgba(241, 100, 30, 0.25); }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.62fr);
+    gap: 56px;
+    align-items: center;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 2.6px;
+    text-transform: uppercase;
+    color: #7fd0cd;
+    margin: 0 0 22px;
+  }
+
+  .eyebrow::before { content: ""; width: 34px; height: 2px; background: #7fd0cd; }
+
+  h1 {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(38px, 5.6vw, 66px);
+    line-height: 1.04;
+    letter-spacing: -0.5px;
+  }
+
+  h1 .accent { color: #ffb28f; font-style: italic; font-weight: 500; }
+
+  .hero-copy {
+    margin: 26px 0 0;
+    max-width: 560px;
+    color: rgba(244, 239, 228, 0.78);
+    font-size: 18px;
+    line-height: 1.66;
+  }
+
+  .hero-copy strong { color: #fff; font-weight: 600; }
+
+  .facts { display: grid; gap: 12px; }
+
+  .fact {
+    background: rgba(244, 239, 228, 0.07);
+    border: 1px solid rgba(244, 239, 228, 0.16);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    backdrop-filter: blur(6px);
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .fact-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    background: rgba(14, 124, 134, 0.35);
+    border: 1px solid rgba(127, 208, 205, 0.35);
+  }
+
+  .fact-icon svg { width: 22px; height: 22px; }
+
+  .fact strong { display: block; font-size: 14.5px; letter-spacing: 0.2px; }
+
+  .fact span { font-size: 13.5px; color: rgba(244, 239, 228, 0.66); line-height: 1.45; display: block; margin-top: 2px; }
+
+  /* reveal animation */
+  .rise { opacity: 0; transform: translateY(22px); animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+  .rise.d1 { animation-delay: 0.08s; } .rise.d2 { animation-delay: 0.18s; }
+  .rise.d3 { animation-delay: 0.30s; } .rise.d4 { animation-delay: 0.42s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rise, .reveal { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+  }
+
+  /* ---------- sections ---------- */
+  .section { padding: 84px 0; position: relative; }
+  .section.tint { background: #fdfaf3; border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft); }
+
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+  }
+
+  .kicker .num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--teal-deep);
+    color: #fff;
+    display: grid; place-items: center;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(28px, 3.6vw, 42px);
+    line-height: 1.12;
+    letter-spacing: -0.3px;
+    max-width: 720px;
+  }
+
+  .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 40px; }
+  .head-copy { max-width: 360px; margin: 0; color: var(--ink-soft); font-size: 15.5px; line-height: 1.6; }
+
+  /* ---------- big pipeline ---------- */
+  .diagram-shell {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 30px 26px 20px;
+    overflow-x: auto;
+  }
+
+  .diagram-shell svg { display: block; min-width: 980px; width: 100%; height: auto; }
+
+  svg text { font-family: var(--body); fill: var(--ink); }
+  svg .t-title { font-size: 16.5px; font-weight: 700; }
+  svg .t-sub { font-size: 12.5px; fill: var(--ink-soft); }
+  svg .t-label { font-size: 12.5px; font-weight: 600; fill: var(--teal-deep); }
+  svg .t-label.coral { fill: var(--coral); }
+  svg .t-white { fill: #fff; }
+  svg .t-mono { font-family: var(--mono); font-size: 11.5px; fill: var(--ink-soft); }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--line);
+    font-size: 13.5px;
+    color: var(--ink-soft);
+  }
+
+  .legend b { color: var(--ink); font-weight: 700; }
+
+  .legend .key {
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+
+  .legend .swatch { width: 22px; height: 4px; border-radius: 2px; background: var(--teal); }
+  .legend .swatch.coral { background: var(--coral); }
+
+  /* ---------- use case cards ---------- */
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    padding: 26px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+  }
+
+  .card.c1::before { background: linear-gradient(90deg, var(--shopify), var(--etsy)); }
+  .card.c2::before { background: linear-gradient(90deg, var(--teal), var(--etsy)); }
+  .card.c3::before { background: linear-gradient(90deg, var(--etsy), var(--pinterest), var(--ig-c)); }
+
+  .case-num {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.6px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .card h3 {
+    margin: 0 0 10px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 23px;
+    line-height: 1.18;
+  }
+
+  .card > p { margin: 0 0 20px; color: var(--ink-soft); font-size: 14.5px; line-height: 1.58; }
+
+  .flow { display: grid; gap: 0; margin-top: auto; }
+
+  .step {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    align-items: center;
+    background: #f8f4ea;
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    padding: 11px 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .step small { display: block; font-weight: 500; color: var(--ink-soft); font-size: 12px; margin-top: 1px; }
+
+  .step .mark { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; }
+  .step .mark svg { width: 40px; height: 40px; display: block; }
+
+  .flow-arrow {
+    display: grid;
+    place-items: center;
+    height: 26px;
+    color: var(--teal);
+  }
+
+  .flow-arrow svg { width: 14px; height: 22px; }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--teal-deep);
+    background: var(--teal-soft);
+    border: 1px solid #c6dedd;
+    border-radius: 999px;
+    padding: 4px 11px;
+  }
+
+  .chip.write { color: #8a4a12; background: #fdeedd; border-color: #ecd3b5; }
+  .chip.scope { color: #fff; background: var(--ink); border-color: var(--ink); }
+
+  /* ---------- scopes and endpoints ---------- */
+  .access-grid { display: grid; grid-template-columns: 0.9fr 1.35fr; gap: 20px; align-items: start; }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow-soft);
+    padding: 28px 26px;
+  }
+
+  .panel h3 { margin: 0 0 6px; font-family: var(--display); font-weight: 600; font-size: 24px; }
+  .panel .muted { margin: 0 0 22px; color: var(--ink-soft); font-size: 14.5px; line-height: 1.55; }
+
+  .scope { display: grid; grid-template-columns: 46px 1fr; gap: 14px; align-items: center; padding: 14px 0; border-top: 1px dashed var(--line); }
+  .scope:last-child { border-bottom: 1px dashed var(--line); }
+
+  .scope-badge {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    font-weight: 800;
+    font-size: 15px;
+  }
+
+  .scope-badge.r { background: var(--teal-soft); color: var(--teal-deep); }
+  .scope-badge.w { background: #fdeedd; color: #8a4a12; }
+
+  .scope code { font-family: var(--mono); font-size: 14px; font-weight: 600; }
+  .scope span { display: block; color: var(--ink-soft); font-size: 13.5px; line-height: 1.45; margin-top: 2px; }
+
+  .not-requested {
+    margin-top: 20px;
+    background: var(--coral-soft);
+    border: 1px solid #f3cdbf;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: #7c3a26;
+  }
+
+  .not-requested b { color: #62290f; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+
+  th {
+    text-align: left;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: var(--ink-soft);
+    font-weight: 700;
+    padding: 0 12px 10px 0;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line-soft); vertical-align: top; line-height: 1.5; }
+
+  td code { font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--teal-deep); white-space: nowrap; }
+
+  .uc {
+    display: inline-grid;
+    place-items: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    margin-right: 4px;
+    color: #fff;
+  }
+
+  .uc.u1 { background: var(--shopify); }
+  .uc.u2 { background: var(--teal); }
+  .uc.u3 { background: var(--coral); }
+
+  .behavior {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .behave {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: #f8f4ea;
+    border: 1px solid var(--line-soft);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .behave b { color: var(--ink); }
+  .behave svg { width: 18px; height: 18px; flex: 0 0 18px; margin-top: 2px; }
+
+  /* ---------- does / never ---------- */
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .duo .panel.good { border-top: 5px solid var(--teal); }
+  .duo .panel.bad { border-top: 5px solid var(--coral); }
+
+  .pledge { list-style: none; margin: 0; padding: 0; }
+
+  .pledge li {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px dashed var(--line);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    align-items: start;
+  }
+
+  .pledge li b { color: var(--ink); }
+
+  .tick, .cross {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 900;
+    font-size: 14px;
+    margin-top: 1px;
+  }
+
+  .tick { background: var(--mint); color: var(--green-ink); }
+  .cross { background: var(--coral-soft); color: var(--coral); }
+
+  /* ---------- closing ---------- */
+  .closing { display: grid; grid-template-columns: 1.4fr 0.9fr; gap: 20px; align-items: stretch; }
+
+  .closing-main {
+    background: var(--ink);
+    color: #f4efe4;
+    border-radius: 18px;
+    padding: 40px 38px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .closing-main h2 { color: #fff; max-width: 520px; position: relative; }
+  .closing-main p { position: relative; margin: 18px 0 0; color: rgba(244, 239, 228, 0.75); max-width: 540px; font-size: 16px; line-height: 1.65; }
+
+  .closing-waves { position: absolute; right: -40px; bottom: -30px; width: 420px; opacity: 0.35; }
+
+  .shopcard {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px 26px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shopcard dl { margin: 0; }
+  .shopcard dt { font-size: 11.5px; text-transform: uppercase; letter-spacing: 1.6px; font-weight: 700; color: var(--ink-soft); }
+  .shopcard dd { margin: 4px 0 18px; font-weight: 600; font-size: 15.5px; line-height: 1.45; }
+  .shopcard dd:last-child { margin-bottom: 0; }
+  .shopcard a { word-break: break-all; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 34px 0 44px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  footer .wrap { display: grid; gap: 6px; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 940px) {
+    .hero-grid, .cards, .access-grid, .duo, .closing { grid-template-columns: 1fr; }
+    .section-head { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .behavior { grid-template-columns: 1fr; }
+    .topline { flex-wrap: wrap; }
+  }
+
+  @media (max-width: 560px) {
+    .wrap { width: calc(100% - 32px); }
+    .section { padding: 60px 0; }
+    .hero-inner { padding: 40px 0 56px; }
+    .panel, .closing-main, .shopcard { padding: 22px 20px; }
+    td, th { font-size: 12.5px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow two"></div>
+  <svg class="hero-waves" viewBox="0 0 1440 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#7fd0cd" stroke-opacity="0.16" stroke-width="1.5">
+      <path d="M-40 120 C 240 60, 460 190, 740 130 S 1240 60, 1490 140"/>
+      <path d="M-40 200 C 240 140, 460 270, 740 210 S 1240 140, 1490 220"/>
+      <path d="M-40 290 C 240 230, 460 360, 740 300 S 1240 230, 1490 310"/>
+      <path d="M-40 390 C 240 330, 460 460, 740 400 S 1240 330, 1490 410"/>
+      <path d="M-40 500 C 240 440, 460 570, 740 510 S 1240 440, 1490 520"/>
+      <path d="M-40 620 C 240 560, 460 690, 740 630 S 1240 560, 1490 640"/>
+    </g>
+  </svg>
+
+  <div class="wrap hero-inner">
+    <div class="topline rise">
+      <div class="lockup">
+        <svg viewBox="0 0 64 64" role="img" aria-label="Siargao Point Break logo">
+          <rect width="64" height="64" rx="14" fill="#0e7c86"/>
+          <path d="M4 42c9-11 15-11 22-3s13 8 22-2c6-7 12-6 12-6v33H4z" fill="#0a5b64"/>
+          <path d="M32 12l10 21H22z" fill="#f6f1e7"/>
+          <circle cx="50" cy="15" r="6" fill="#ffb28f"/>
+        </svg>
+        <div>
+          <div class="lockup-name">Siargao Point Break</div>
+          <div class="lockup-sub">Etsy seller operations, API access request</div>
+        </div>
+      </div>
+      <a class="store-pill" href="https://siargaopointbreak.etsy.com" target="_blank" rel="noopener">
+        <span class="dot"></span> siargaopointbreak.etsy.com
+      </a>
+    </div>
+
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow rise d1">Etsy Open API v3 request</p>
+        <h1 class="rise d1">API access for one small <span class="accent">surf jewelry</span> shop.</h1>
+        <p class="hero-copy rise d2">
+          Siargao Point Break is a single owner Etsy shop selling ocean inspired beaded jewelry from the
+          Philippines. This page explains the <strong>private tool</strong> behind this API application: it moves
+          my own Shopify listings onto Etsy, automates listing drafts with a human review step, and turns live
+          Etsy listings into Pinterest pins and Instagram posts that send shoppers <strong>back to Etsy</strong>.
+        </p>
+      </div>
+
+      <aside class="facts rise d3" aria-label="Request summary">
+        <div class="fact">
+          <div class="fact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7fd0cd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.7-7-11a7 7 0 0 1 14 0c0 6.3-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+          </div>
+          <div>
+            <strong>One shop, one seller</strong>
+            <span>Private tool for the siargaopointbreak shop only. No other users, ever.</span>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7fd0cd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 12l2.2 2.2L15.5 9.5"/></svg>
+          </div>
+          <div>
+            <strong>Human review kept</strong>
+            <span>The API creates drafts and syncs data. I approve everything before it goes live.</span>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#7fd0cd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h10"/><path d="M10 6l6 6-6 6"/><path d="M20 5v14"/></svg>
+          </div>
+          <div>
+            <strong>Traffic flows to Etsy</strong>
+            <span>Every pin and post created from a listing links straight back to that Etsy listing.</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PIPELINE ================= -->
+<section class="section" id="pipeline">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <p class="kicker"><span class="num">1</span> The whole picture</p>
+        <h2>One pipeline: from my product records to Etsy, then out to social and back.</h2>
+      </div>
+      <p class="head-copy">Everything below runs on my own computer against my own accounts. Etsy sits in the middle as the store of record.</p>
+    </div>
+
+    <div class="diagram-shell reveal">
+      <svg viewBox="0 0 1180 470" role="img" aria-label="Pipeline diagram: Shopify and product assets feed a private listing tool, which creates and updates Etsy listings. Etsy listing data feeds Pinterest and Instagram content, and shoppers click back to Etsy.">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#0e7c86"/>
+          </marker>
+          <marker id="arrCoral" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#e8563a"/>
+          </marker>
+          <linearGradient id="igGrad" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#f9ce34"/><stop offset="0.5" stop-color="#ee2a7b"/><stop offset="1" stop-color="#6228d7"/>
+          </linearGradient>
+        </defs>
+
+        <!-- connectors -->
+        <g fill="none" stroke="#0e7c86" stroke-width="2.4">
+          <path d="M212 122 C 258 122, 262 176, 306 186" marker-end="url(#arr)"/>
+          <path d="M212 330 C 258 330, 262 266, 306 254" marker-end="url(#arr)"/>
+          <path d="M508 220 L 570 220" marker-end="url(#arr)"/>
+          <path d="M790 178 C 838 160, 840 118, 884 106" marker-end="url(#arr)"/>
+          <path d="M790 262 C 838 280, 840 322, 884 334" marker-end="url(#arr)"/>
+        </g>
+        <path d="M968 392 C 940 452, 740 470, 688 314" fill="none" stroke="#e8563a" stroke-width="2.4" stroke-dasharray="7 6" marker-end="url(#arrCoral)"/>
+
+        <!-- connector labels -->
+        <g>
+          <circle cx="252" cy="112" r="12" fill="#0c2233"/><text x="252" y="116.5" text-anchor="middle" class="t-white" font-size="12" font-weight="700">1</text>
+          <text x="272" y="116" class="t-label">read my own products</text>
+
+          <circle cx="252" cy="344" r="12" fill="#0c2233"/><text x="252" y="348.5" text-anchor="middle" class="t-white" font-size="12" font-weight="700">2</text>
+          <text x="272" y="348" class="t-label">photos, prices, copy</text>
+
+          <circle cx="539" cy="196" r="12" fill="#0c2233"/><text x="539" y="200.5" text-anchor="middle" class="t-white" font-size="12" font-weight="700">3</text>
+          <text x="539" y="246" text-anchor="middle" class="t-mono">createDraftListing</text>
+          <text x="539" y="262" text-anchor="middle" class="t-mono">uploadListingImage</text>
+
+          <circle cx="838" cy="112" r="12" fill="#0c2233"/><text x="838" y="116.5" text-anchor="middle" class="t-white" font-size="12" font-weight="700">4</text>
+          <text x="836" y="144" text-anchor="middle" class="t-mono">getListing (read)</text>
+
+          <circle cx="838" cy="340" r="12" fill="#0c2233"/><text x="838" y="344.5" text-anchor="middle" class="t-white" font-size="12" font-weight="700">4</text>
+
+          <circle cx="836" cy="443" r="12" fill="#e8563a"/><text x="836" y="447.5" text-anchor="middle" class="t-white" font-size="12" font-weight="700">5</text>
+          <text x="856" y="447" class="t-label coral">shoppers click through and buy on Etsy</text>
+        </g>
+
+        <!-- Shopify node -->
+        <g>
+          <rect x="30" y="80" width="182" height="86" rx="14" fill="#fffdf8" stroke="#5e8e3e" stroke-width="1.6"/>
+          <rect x="46" y="100" width="44" height="44" rx="11" fill="#5e8e3e"/>
+          <path d="M62 112c1.5-1.8 3.4-2.8 5-2.6 0.8 0.1 1.6 0.5 2.3 1.3 2 2.3 3.3 7.2 3.9 12.5l3.3 1-2.1 13.4-14.9-2.6 1.5-21.5 1-1.5z" fill="#fff" opacity="0.95"/>
+          <path d="M66.5 111.5c1-1.2 2.1-1.9 3-1.8" fill="none" stroke="#5e8e3e" stroke-width="1.4"/>
+          <text x="104" y="119" class="t-title" font-size="15.5">Shopify</text>
+          <text x="104" y="138" class="t-sub">my own store,</text>
+          <text x="104" y="153" class="t-sub">same products</text>
+        </g>
+
+        <!-- assets node -->
+        <g>
+          <rect x="30" y="288" width="182" height="86" rx="14" fill="#fffdf8" stroke="#c99b3f" stroke-width="1.6"/>
+          <rect x="46" y="308" width="44" height="44" rx="11" fill="#c99b3f"/>
+          <g stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round">
+            <rect x="55" y="317" width="20" height="16" rx="2.5"/>
+            <circle cx="61.5" cy="322.5" r="1.8" fill="#fff" stroke="none"/>
+            <path d="M57 330l4.5-4.5 3.5 3.5 4-4 4 5"/>
+            <path d="M59 338h18M59 343h12"/>
+          </g>
+          <text x="104" y="327" class="t-title" font-size="15.5">Product assets</text>
+          <text x="104" y="346" class="t-sub">photos, pricing,</text>
+          <text x="104" y="361" class="t-sub">descriptions</text>
+        </g>
+
+        <!-- tool node -->
+        <g>
+          <rect x="306" y="164" width="202" height="112" rx="14" fill="#0c2233"/>
+          <rect x="324" y="186" width="44" height="44" rx="11" fill="#0e7c86"/>
+          <g stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M338 196l-6 12 6 12"/>
+            <path d="M354 196l6 12-6 12"/>
+          </g>
+          <text x="382" y="203" class="t-title t-white" font-size="15.5">Private listing tool</text>
+          <text x="382" y="222" class="t-sub" fill="#9fb3c2">runs on my computer</text>
+          <text x="382" y="237" class="t-sub" fill="#9fb3c2">single user: me</text>
+          <text x="324" y="260" class="t-mono" fill="#7fd0cd">OAuth 2.0 + PKCE, tokens stored locally</text>
+        </g>
+
+        <!-- Etsy node -->
+        <g>
+          <rect x="570" y="140" width="220" height="160" rx="16" fill="#fff4ec" stroke="#f1641e" stroke-width="2"/>
+          <rect x="590" y="162" width="48" height="48" rx="12" fill="#f1641e"/>
+          <text x="614" y="194" text-anchor="middle" fill="#fff" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="600" font-size="24">E</text>
+          <text x="652" y="182" class="t-title">Etsy shop</text>
+          <text x="652" y="201" class="t-sub">siargaopointbreak</text>
+          <text x="590" y="238" class="t-sub" font-weight="600" fill="#0c2233">Store of record</text>
+          <text x="590" y="257" class="t-sub">listings, prices, stock,</text>
+          <text x="590" y="272" class="t-sub">orders all live here</text>
+        </g>
+
+        <!-- Pinterest node -->
+        <g>
+          <rect x="884" y="64" width="196" height="86" rx="14" fill="#fffdf8" stroke="#e60023" stroke-width="1.6"/>
+          <circle cx="924" cy="107" r="22" fill="#e60023"/>
+          <text x="924" y="115" text-anchor="middle" fill="#fff" font-family="Archivo, sans-serif" font-weight="800" font-size="24">P</text>
+          <text x="958" y="103" class="t-title" font-size="15.5">Pinterest</text>
+          <text x="958" y="122" class="t-sub">product pins</text>
+        </g>
+
+        <!-- Instagram node -->
+        <g>
+          <rect x="884" y="292" width="196" height="86" rx="14" fill="#fffdf8" stroke="#ee2a7b" stroke-width="1.6"/>
+          <rect x="902" y="313" width="44" height="44" rx="12" fill="url(#igGrad)"/>
+          <g stroke="#fff" stroke-width="2" fill="none">
+            <rect x="911" y="322" width="26" height="26" rx="8"/>
+            <circle cx="924" cy="335" r="6"/>
+            <circle cx="932.5" cy="326.5" r="1.6" fill="#fff" stroke="none"/>
+          </g>
+          <text x="958" y="331" class="t-title" font-size="15.5">Instagram</text>
+          <text x="958" y="350" class="t-sub">product posts</text>
+        </g>
+      </svg>
+
+      <div class="legend">
+        <span class="key"><span class="swatch"></span> API calls made by the tool</span>
+        <span class="key"><span class="swatch coral"></span> Shopper traffic returning to Etsy</span>
+        <span>Numbers <b>1 to 5</b> match the three workflows described below.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= USE CASES ================= -->
+<section class="section tint" id="usecases">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <p class="kicker"><span class="num">2</span> Use cases</p>
+        <h2>Three workflows, each with a clear start and finish.</h2>
+      </div>
+      <p class="head-copy">The same small catalog powers all three. The API removes the copying and pasting, not the judgment.</p>
+    </div>
+
+    <div class="cards">
+      <!-- case 1 -->
+      <article class="card c1 reveal">
+        <p class="case-num">Use case 01</p>
+        <h3>Move my Shopify listings onto Etsy</h3>
+        <p>I already sell the same handmade pieces on my own Shopify store. Instead of retyping every product, the tool copies my own records across and prepares Etsy drafts.</p>
+        <div class="flow" aria-label="Shopify to Etsy flow">
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#5e8e3e"/><path d="M15.5 12.6c1.4-1.7 3-2.5 4.4-2.3.7 0.1 1.4 0.5 2 1.2 1.8 2 2.9 6.3 3.4 11l2.9 0.9-1.8 11.7-13-2.3 1.3-18.8 0.8-1.4z" fill="#fff"/></svg></span>
+            <div>Read my own Shopify products<small>titles, prices, photos, quantities</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#0e7c86"/><g stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"><path d="M12 14h16M12 20h16M12 26h10"/></g></svg></span>
+            <div>Map fields to the Etsy format<small>title, price, tags, materials, stock</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#f1641e"/><text x="20" y="27" text-anchor="middle" fill="#fff" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="600" font-size="19">E</text></svg></span>
+            <div>Create Etsy draft listings<small>createDraftListing + uploadListingImage</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#0c2233"/><g stroke="#7fd0cd" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="20" cy="16" r="5.5"/><path d="M10 31c1.6-5 5.4-7.5 10-7.5S38.4 26 30 31" transform="scale(0.98)"/></g></svg></span>
+            <div>I review each draft, then publish<small>nothing goes live without me</small></div>
+          </div>
+        </div>
+        <div class="chip-row">
+          <span class="chip scope">listings_w</span>
+          <span class="chip write">createDraftListing</span>
+          <span class="chip write">uploadListingImage</span>
+        </div>
+      </article>
+
+      <!-- case 2 -->
+      <article class="card c2 reveal">
+        <p class="case-num">Use case 02</p>
+        <h3>Automate new listings, keep them in sync</h3>
+        <p>New pieces start as photos and notes on my computer. The tool turns prepared assets into drafts and keeps price and stock on Etsy matching my records.</p>
+        <div class="flow" aria-label="Listing automation flow">
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#c99b3f"/><g stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"><rect x="11" y="11" width="18" height="14" rx="2.5"/><circle cx="16.5" cy="16" r="1.7" fill="#fff" stroke="none"/><path d="M13 22l4-4 3 3 3.5-3.5L27 21"/><path d="M13 29.5h14"/></g></svg></span>
+            <div>Prepared photos and copy<small>my product asset folder</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#f1641e"/><g stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"><path d="M13 20h14M20 13v14"/></g></svg></span>
+            <div>Draft created through the API<small>one draft per new piece</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#0e7c86"/><g stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16a8 8 0 0 1 14-3l2 2.5"/><path d="M28 10v6h-6"/><path d="M28 24a8 8 0 0 1-14 3l-2-2.5"/><path d="M12 30v-6h6"/></g></svg></span>
+            <div>Price and stock stay in sync<small>updateListing + updateListingInventory</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#0c2233"/><g stroke="#7fd0cd" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="11" y="11" width="18" height="18" rx="4"/><path d="M15.5 20l3 3 6-6.5"/></g></svg></span>
+            <div>Human review before anything goes live<small>drafts stay drafts until I approve</small></div>
+          </div>
+        </div>
+        <div class="chip-row">
+          <span class="chip scope">listings_r</span>
+          <span class="chip scope">listings_w</span>
+          <span class="chip">getListingsByShop</span>
+          <span class="chip write">updateListing</span>
+        </div>
+      </article>
+
+      <!-- case 3 -->
+      <article class="card c3 reveal">
+        <p class="case-num">Use case 03</p>
+        <h3>Turn listings into pins and posts</h3>
+        <p>Marketing reads Etsy, it never writes. The tool pulls a live listing and builds a Pinterest pin and an Instagram post around it, always linking back to the listing.</p>
+        <div class="flow" aria-label="Marketing content flow">
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#f1641e"/><g stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"><circle cx="18" cy="18" r="7"/><path d="M23.5 23.5L30 30"/></g></svg></span>
+            <div>Read one live listing<small>getListing + getListingImages, read only</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#0e7c86"/><g stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="12" width="13" height="17" rx="2.5"/><path d="M27 15h3v17h-13v-3"/><path d="M14 18h5M14 22h5"/></g></svg></span>
+            <div>Compose pin and post<small>listing photo, caption, listing URL</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#e60023"/><text x="20" y="27.5" text-anchor="middle" fill="#fff" font-family="Archivo, sans-serif" font-weight="800" font-size="20">P</text></svg></span>
+            <div>Publish on Pinterest and Instagram<small>through their own official APIs</small></div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1v16M1.5 12.5L7 19l5.5-6.5"/></svg></div>
+          <div class="step">
+            <span class="mark"><svg viewBox="0 0 40 40"><rect width="40" height="40" rx="10" fill="#e8563a"/><g stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M28 13c-6-3-14 1-14 8 0 3 1.5 5.5 4 7"/><path d="M18 31l-1-4 4-0.5"/><path d="M22 13h6v6" transform="translate(1,-1)"/></g></svg></span>
+            <div>Shoppers click back to Etsy<small>the listing link is always the destination</small></div>
+          </div>
+        </div>
+        <div class="chip-row">
+          <span class="chip scope">listings_r</span>
+          <span class="chip scope">shops_r</span>
+          <span class="chip">getListing</span>
+          <span class="chip">getListingImages</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCOPES + ENDPOINTS ================= -->
+<section class="section" id="access">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <p class="kicker"><span class="num">3</span> Exactly what is requested</p>
+        <h2>Three scopes, a short list of endpoints, low volume.</h2>
+      </div>
+      <p class="head-copy">The request is scoped to listing management for my own shop. Nothing about buyers, transactions, or anyone else's data.</p>
+    </div>
+
+    <div class="access-grid">
+      <div class="panel reveal">
+        <h3>OAuth scopes</h3>
+        <p class="muted">Requested for a single seller account: mine.</p>
+
+        <div class="scope">
+          <div class="scope-badge r">R</div>
+          <div><code>listings_r</code><span>Read my listings so sync and marketing match what is live on Etsy.</span></div>
+        </div>
+        <div class="scope">
+          <div class="scope-badge w">W</div>
+          <div><code>listings_w</code><span>Create draft listings, upload images, and update price and stock.</span></div>
+        </div>
+        <div class="scope">
+          <div class="scope-badge r">R</div>
+          <div><code>shops_r</code><span>Read my own shop profile to confirm the tool is pointed at the right shop.</span></div>
+        </div>
+
+        <div class="not-requested">
+          <b>Not requested:</b> transactions, billing, address, cart, favorites, feedback, or any scope touching buyers or other sellers.
+        </div>
+      </div>
+
+      <div class="panel reveal">
+        <h3>Endpoints the tool calls</h3>
+        <p class="muted">Etsy Open API v3. The badge shows which use case each endpoint serves.</p>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr><th>Endpoint</th><th>Purpose</th><th>Used by</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>getShop</code></td><td>Confirm shop identity at startup</td><td><span class="uc u1">1</span><span class="uc u2">2</span><span class="uc u3">3</span></td></tr>
+              <tr><td><code>getListingsByShop</code></td><td>List my listings for sync and content planning</td><td><span class="uc u2">2</span><span class="uc u3">3</span></td></tr>
+              <tr><td><code>createDraftListing</code></td><td>Create a draft, never a live listing</td><td><span class="uc u1">1</span><span class="uc u2">2</span></td></tr>
+              <tr><td><code>uploadListingImage</code></td><td>Attach my product photos to a draft</td><td><span class="uc u1">1</span><span class="uc u2">2</span></td></tr>
+              <tr><td><code>updateListing</code></td><td>Correct titles, tags, and descriptions I approve</td><td><span class="uc u2">2</span></td></tr>
+              <tr><td><code>updateListingInventory</code></td><td>Keep price and quantity matching my records</td><td><span class="uc u2">2</span></td></tr>
+              <tr><td><code>getListing</code></td><td>Read one listing to build a pin or post</td><td><span class="uc u3">3</span></td></tr>
+              <tr><td><code>getListingImages</code></td><td>Fetch the listing photo for that pin or post</td><td><span class="uc u3">3</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="behavior">
+          <div class="behave">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0e7c86" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+            <span><b>Low volume.</b> A short batch run when I add products, a small daily sync. Dozens of calls a day, far under the default limits.</span>
+          </div>
+          <div class="behave">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0e7c86" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+            <span><b>OAuth 2.0 with PKCE.</b> Tokens live in a local file on my computer, never in a repo, never shared.</span>
+          </div>
+          <div class="behave">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0e7c86" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l5-10 4 7 3-4 4 7z"/></svg>
+            <span><b>Backoff built in.</b> The tool respects rate limit headers and retries politely with exponential backoff.</span>
+          </div>
+          <div class="behave">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#0e7c86" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z"/><path d="M9.5 12l2 2 3.5-4"/></svg>
+            <span><b>Nothing auto publishes.</b> The API writes drafts and sync updates. Publishing stays a manual decision.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DOES / NEVER ================= -->
+<section class="section tint" id="conduct">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <p class="kicker"><span class="num">4</span> Responsible use</p>
+        <h2>What this tool does, and what it will never do.</h2>
+      </div>
+    </div>
+
+    <div class="duo">
+      <div class="panel good reveal">
+        <h3>It does</h3>
+        <p class="muted">Boring, seller side plumbing for one shop.</p>
+        <ul class="pledge">
+          <li><span class="tick">&#10003;</span><span><b>Works only on my shop.</b> Every call is scoped to siargaopointbreak, a shop I own.</span></li>
+          <li><span class="tick">&#10003;</span><span><b>Creates drafts for my review.</b> Listing quality stays my responsibility, the API just saves the typing.</span></li>
+          <li><span class="tick">&#10003;</span><span><b>Keeps Etsy accurate.</b> Price and stock updates flow from my records to Etsy so buyers see the truth.</span></li>
+          <li><span class="tick">&#10003;</span><span><b>Sends shoppers to Etsy.</b> Pins and posts exist to bring buyers to the Etsy listing, not away from it.</span></li>
+          <li><span class="tick">&#10003;</span><span><b>Follows the Etsy API Terms of Use</b> and the trademark and branding guidelines.</span></li>
+        </ul>
+      </div>
+
+      <div class="panel bad reveal">
+        <h3>It never does</h3>
+        <p class="muted">Hard lines, by design.</p>
+        <ul class="pledge">
+          <li><span class="cross">&#10005;</span><span><b>No scraping.</b> No crawling of Etsy pages, search results, or other shops. The API is the only door.</span></li>
+          <li><span class="cross">&#10005;</span><span><b>No other people's data.</b> No buyer data, no other sellers, no marketplace analytics.</span></li>
+          <li><span class="cross">&#10005;</span><span><b>No resale or sharing of Etsy data.</b> Listing data is used to make my own pins and posts, nothing else.</span></li>
+          <li><span class="cross">&#10005;</span><span><b>No automated reviews, messages, or purchases.</b> The tool never acts as a buyer or contacts anyone.</span></li>
+          <li><span class="cross">&#10005;</span><span><b>No public app.</b> One seller, one machine, zero third party users. Keys stay private.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CLOSING ================= -->
+<section class="section" id="request">
+  <div class="wrap">
+    <div class="closing">
+      <div class="closing-main reveal">
+        <svg class="closing-waves" viewBox="0 0 420 220" aria-hidden="true">
+          <g fill="none" stroke="#7fd0cd" stroke-width="1.5">
+            <path d="M0 60 C 90 30, 150 90, 240 60 S 390 30, 440 70"/>
+            <path d="M0 110 C 90 80, 150 140, 240 110 S 390 80, 440 120"/>
+            <path d="M0 160 C 90 130, 150 190, 240 160 S 390 130, 440 170"/>
+          </g>
+        </svg>
+        <p class="eyebrow" style="color:#7fd0cd;">The ask</p>
+        <h2>Please approve Etsy API access for Siargao Point Break.</h2>
+        <p>
+          This is a personal tool for a small handmade shop: move my own Shopify listings to Etsy, prepare
+          drafts I review by hand, and make social content that points shoppers to Etsy. Scoped access,
+          low volume, and Etsy stays the store of record.
+        </p>
+      </div>
+
+      <aside class="shopcard reveal">
+        <dl>
+          <dt>Shop</dt>
+          <dd><a href="https://siargaopointbreak.etsy.com" target="_blank" rel="noopener">siargaopointbreak.etsy.com</a></dd>
+          <dt>Seller</dt>
+          <dd>Single owner, based in the Philippines</dd>
+          <dt>Products</dt>
+          <dd>Ocean inspired beaded jewelry, starting with a sharktooth necklace line</dd>
+          <dt>Application type</dt>
+          <dd>Private, personal seller tool. Not distributed, no other users.</dd>
+          <dt>Contact</dt>
+          <dd>The email on this Etsy developer account</dd>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>The term "Etsy" is a trademark of Etsy, Inc. This application uses the Etsy API but is not endorsed or certified by Etsy, Inc.</span>
+    <span>Shopify, Pinterest, and Instagram are trademarks of their respective owners, mentioned here only to describe the workflow.</span>
+    <span>Siargao Point Break, 2026. Built as supporting material for an Etsy Open API v3 application.</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("in"); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+  })();
+</script>
+
+</body>
+</html>
