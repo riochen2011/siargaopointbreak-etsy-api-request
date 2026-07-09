@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Siargao Point Break - Etsy API access request</title>
-<meta name="description" content="Why Siargao Point Break needs Etsy API access: import my own Shopify listings, create and update my own listings, and make social posts that link back to my Etsy shop.">
+<title>Siargao Point Break Listing Manager - Etsy API request</title>
+<meta name="description" content="A private app I built to create and edit listings in my own Etsy shop. Standalone, single user, not connected to any other software.">
 <style>
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     color: #222;
     line-height: 1.6;
-    max-width: 720px;
+    max-width: 700px;
     margin: 0 auto;
     padding: 32px 20px 64px;
     font-size: 17px;
   }
-  h1 { font-size: 26px; margin: 0 0 4px; }
-  h2 { font-size: 20px; margin: 32px 0 8px; }
+  h1 { font-size: 25px; margin: 0 0 4px; }
+  h2 { font-size: 19px; margin: 30px 0 8px; }
   .sub { color: #666; margin: 0 0 24px; }
   p { margin: 0 0 14px; }
   ul { margin: 0 0 14px; padding-left: 22px; }
@@ -29,54 +29,36 @@
 </head>
 <body>
 
-<h1>Siargao Point Break - Etsy API access request</h1>
-<p class="sub">Shop: <a href="https://siargaopointbreak.etsy.com">siargaopointbreak.etsy.com</a></p>
+<h1>Siargao Point Break Listing Manager</h1>
+<p class="sub">A private app for my own Etsy shop: <a href="https://siargaopointbreak.etsy.com">siargaopointbreak.etsy.com</a></p>
 
 <p>
-  I run a small handmade jewelry shop on Etsy called Siargao Point Break. I am the only person using this
-  app. It is a private tool for my own shop. I am not building anything public and no one else will use it.
+  I run a small handmade jewelry shop on Etsy. I built a simple app for myself to help me manage the
+  listings in my own shop. I am the only person who uses it.
 </p>
 
-<p>I am requesting API access so I can spend less time copying and pasting between my own accounts. Here is what I want to do:</p>
-
-<h2>1. Import my own Shopify listings into Etsy</h2>
+<h2>What the app does</h2>
 <p>
-  I sell the same jewelry on my own Shopify store. Instead of retyping every product by hand, I want to read
-  my own Shopify products and create Etsy draft listings from them. I review and publish each one myself.
+  It lets me create and edit listings in my own Etsy shop. Instead of filling in every field by hand in the
+  Etsy dashboard one listing at a time, I can prepare a listing in my app and send it to my shop as a draft.
+  I always review and publish each listing myself in Etsy.
 </p>
-
-<h2>2. Create and update my own listings</h2>
-<p>
-  When I make a new piece, I want to turn my photos and notes into an Etsy draft. I also want to keep the
-  price and quantity on Etsy matching my records. Nothing is published automatically. I approve everything
-  before it goes live.
-</p>
-
-<h2>3. Make social posts that link back to my Etsy shop</h2>
-<p>
-  I want to read my own live Etsy listings so I can make Pinterest pins and Instagram posts for them. Every
-  post links back to the Etsy listing so people come to my Etsy shop to buy.
-</p>
-
-<hr>
+<p>That is the whole app. It does one thing: help me manage my own shop's listings.</p>
 
 <h2>What access I need</h2>
 <ul>
-  <li><code>listings_r</code> - read my own listings</li>
-  <li><code>listings_w</code> - create and update my own draft listings</li>
-  <li><code>shops_r</code> - read my own shop details</li>
+  <li><code>listings_r</code> - read the listings in my own shop</li>
+  <li><code>listings_w</code> - create and edit draft listings in my own shop</li>
 </ul>
-<p>
-  I do not need and am not requesting access to buyers, orders, payments, or any other seller's data.
-</p>
 
-<h2>How I will use it responsibly</h2>
+<h2>Important points</h2>
 <ul>
-  <li>The app only touches my own shop, siargaopointbreak.</li>
-  <li>It creates drafts. I review and publish by hand.</li>
-  <li>It does not scrape Etsy or collect data from other shops.</li>
-  <li>It does not share or resell any Etsy data.</li>
-  <li>It runs on my own computer. It is not a public app.</li>
+  <li>It is a standalone app that only I use.</li>
+  <li>It only touches my own shop, siargaopointbreak.</li>
+  <li>It is not connected to any other software, service, or marketplace.</li>
+  <li>I do not share my API keys with anyone.</li>
+  <li>It does not read or use any other seller's data, and it does not touch orders, buyers, or payments.</li>
+  <li>It does not scrape Etsy.</li>
 </ul>
 
 <p class="foot">

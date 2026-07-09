@@ -1,38 +1,28 @@
-# Siargao Point Break - Etsy API access request
+# Siargao Point Break Listing Manager
 
-Shop: https://siargaopointbreak.etsy.com
+A private app for my own Etsy shop: https://siargaopointbreak.etsy.com
 
-I run a small handmade jewelry shop on Etsy called Siargao Point Break. I am the only person using this app. It is a private tool for my own shop. I am not building anything public and no one else will use it.
+I run a small handmade jewelry shop on Etsy. I built a simple app for myself to help me manage the listings in my own shop. I am the only person who uses it.
 
-I am requesting API access so I can spend less time copying and pasting between my own accounts. Here is what I want to do.
+## What the app does
 
-## 1. Import my own Shopify listings into Etsy
+It lets me create and edit listings in my own Etsy shop. Instead of filling in every field by hand in the Etsy dashboard one listing at a time, I can prepare a listing in my app and send it to my shop as a draft. I always review and publish each listing myself in Etsy.
 
-I sell the same jewelry on my own Shopify store. Instead of retyping every product by hand, I want to read my own Shopify products and create Etsy draft listings from them. I review and publish each one myself.
-
-## 2. Create and update my own listings
-
-When I make a new piece, I want to turn my photos and notes into an Etsy draft. I also want to keep the price and quantity on Etsy matching my records. Nothing is published automatically. I approve everything before it goes live.
-
-## 3. Make social posts that link back to my Etsy shop
-
-I want to read my own live Etsy listings so I can make Pinterest pins and Instagram posts for them. Every post links back to the Etsy listing so people come to my Etsy shop to buy.
+That is the whole app. It does one thing: help me manage my own shop's listings.
 
 ## What access I need
 
-- `listings_r` - read my own listings
-- `listings_w` - create and update my own draft listings
-- `shops_r` - read my own shop details
+- `listings_r` - read the listings in my own shop
+- `listings_w` - create and edit draft listings in my own shop
 
-I do not need and am not requesting access to buyers, orders, payments, or any other seller's data.
+## Important points
 
-## How I will use it responsibly
-
-- The app only touches my own shop, siargaopointbreak.
-- It creates drafts. I review and publish by hand.
-- It does not scrape Etsy or collect data from other shops.
-- It does not share or resell any Etsy data.
-- It runs on my own computer. It is not a public app.
+- It is a standalone app that only I use.
+- It only touches my own shop, siargaopointbreak.
+- It is not connected to any other software, service, or marketplace.
+- I do not share my API keys with anyone.
+- It does not read or use any other seller's data, and it does not touch orders, buyers, or payments.
+- It does not scrape Etsy.
 
 ---
 
